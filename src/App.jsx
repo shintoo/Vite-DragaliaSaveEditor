@@ -16,7 +16,7 @@ import ErrorBoundary from './ErrorBoundary';
 
 function App() {
 
-  const VERSION = "beta-1.3";
+  const VERSION = "beta-1.3.1";
 
   const editorState = useSelector(state => state.editorState);
 

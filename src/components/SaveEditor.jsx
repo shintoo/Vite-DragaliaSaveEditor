@@ -134,7 +134,10 @@ function SaveEditor({ editorVersion }) {
     }
   }
 
-  const { repairDragonStories } = useRepairUtils(maps);
+  const { 
+    repairDragonStories,
+    repairDupeWeaponPassiveAbilityIds
+  } = useRepairUtils(maps);
 
   // handle repairing save data if needed
   useEffect(() => {
@@ -142,6 +145,7 @@ function SaveEditor({ editorVersion }) {
       const repairSave = async () => {
         const results = [];
         await runRepair(results, repairDragonStories);
+        await runRepair(results, repairDupeWeaponPassiveAbilityIds);
         setRepairResults(results);
       };
       repairSave();

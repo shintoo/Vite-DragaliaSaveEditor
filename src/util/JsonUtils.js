@@ -8,6 +8,23 @@ const subtractSets = (setA, setB) => {
     return resultSet;
 };
 
+const filterDuplicates = (list, field_name) => {
+    const uniqueIds = new Set();
+    const filteredList = [];
+    const filtered = new Set();
+    for (const item of list) {
+        const id = item[field_name];
+        if (!uniqueIds.has(id)) {
+            uniqueIds.add(id);
+            filteredList.push(item);
+        } else {
+            filtered.add(id);
+        }
+    }
+
+    return [filteredList, filtered];
+}
+
 const getSetFromList = (list, field_name) => {
     const resultSet = new Set();
     list.forEach(obj => {
@@ -148,5 +165,6 @@ export default {
     sumFields,
     getSetFromList,
     listHasValue,
-    checkForDuplicateValues
+    checkForDuplicateValues,
+    filterDuplicates
 }

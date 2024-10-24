@@ -2,8 +2,8 @@ import { useDispatch } from 'react-redux';
 import { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { MappingContext } from '../components/SaveEditor';
-import { addJsonDataListObject, replaceJsonDataListObject, addToObjectListObjectField
-
+import { addJsonDataListObject, replaceJsonDataListObject, addToObjectListObjectField,
+    setList
  } from '../actions/JsonDataActions';
 
 import JsonUtils from './JsonUtils';
@@ -14,6 +14,7 @@ const useRepairUtils = (maps) => {
 
     const unitStoryList = useSelector(state => state.jsonData.data.unit_story_list);
     const dragonReliabilityList = useSelector(state => state.jsonData.data.dragon_reliability_list);
+    const weaponPassiveAbilityList = useSelector(state => state.jsonData.data.weapon_passive_ability_list);
 
     const repairDragonStories = () => {
         let out = "Added stories: ";
@@ -43,7 +44,7 @@ const useRepairUtils = (maps) => {
                 };
                 dispatch(addJsonDataListObject("unit_story_list", story));
                 if (repairCount++ < 4) {
-                    out += `${dragonMeta.FullName}${i}, `;
+                    out += `${dragonMeta.FullName} (#${i}), `;
                 }
                 repaired = true;
             }
@@ -52,8 +53,23 @@ const useRepairUtils = (maps) => {
         return [repaired, out];
     }
 
+    const repairDupeWeaponPassiveAbilityIds = () => {
+        let [filteredList, filtered] = JsonUtils.filterDuplicates(weaponPassiveAbilityList, "weapon_passive_ability_id");
+        let repaired = false;
+        let out = "";
+
+        if (filtered.size > 0) {
+            repaired = true;
+            out = `Removed duplicate weapon passive ability ids: ${Array.from(filtered).slice(0, 5).join(", ")}`;
+            dispatch(setList("weapon_passive_ability_list", filteredList));
+        }
+
+        return [repaired, out];
+    }
+
     return { 
-        repairDragonStories
+        repairDragonStories,
+        repairDupeWeaponPassiveAbilityIds
     };
 };
 

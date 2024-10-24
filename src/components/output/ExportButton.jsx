@@ -70,6 +70,8 @@ function ExportButton() {
             jsonData.data.ability_crest_list, "ability_crest_id");
         await runTest("noDupeStoryIdTest", results, Validation.noDupeIdTest,
             jsonData.data.unit_story_list, "unit_story_id");
+        await runTest("noDupeWeaponPassiveIdTest", results, Validation.noDupeIdTest,
+            jsonData.data.weapon_passive_ability_list, "weapon_passive_ability_id");
         await runTest("allDragonsHaveBondTest", results, Validation.allDragonsHaveBondTest,
             jsonData.data.album_dragon_list, jsonData.data.dragon_reliability_list);
         //await runTest("noMonaTest", results, Validation.noMonaTest, jsonData.data.chara_list);
