@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux';
 import { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { MappingContext } from '../components/SaveEditor';
-import { addJsonDataListObject, replaceJsonDataListObject, addToObjectListObjectField,
+import { addJsonDataListObject, removeJsonDataListObject, replaceJsonDataListObject, addToObjectListObjectField,
     updateJsonDataObjectField
 } from '../actions/JsonDataActions';
 

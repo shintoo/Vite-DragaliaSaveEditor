@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { updateJsonDataListField, addJsonDataListObject,
-  replaceJsonDataListObject, addToObjectListObjectField } from '../../../actions/JsonDataActions';
+  replaceJsonDataListObject, removeJsonDataListObject, addToObjectListObjectField } from '../../../actions/JsonDataActions';
 
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -21,7 +21,7 @@ const MAX_AUGMENT_COUNT = 100;
 function CharaList_CharaUpgradeButtons({adventurerId, adventurerMeta}) {
 
   const dispatch = useDispatch();
-  const { addAdventurerStory, maxAdventurer } = useDragaliaActions();
+  const { addAdventurerStory, removeAdventurerStory, maxAdventurer } = useDragaliaActions();
 
   const adventurerObject = useSelector(state => state.jsonData.data.chara_list
     .find(adventurerObject => adventurerObject["chara_id"] === adventurerId));
