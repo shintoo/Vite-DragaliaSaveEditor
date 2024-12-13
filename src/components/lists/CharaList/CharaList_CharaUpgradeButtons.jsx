@@ -42,7 +42,7 @@ function CharaList_CharaUpgradeButtons({adventurerId, adventurerMeta}) {
 
   const onRemove = () => {
     dispatch(removeJsonDataListObject("chara_list", "chara_id", adventurerId));
-    removeAdventurerStory(adventurerId, true);
+    removeAdventurerStory(adventurerId);
 
     dispatch(addToObjectListObjectField(
       "fort_bonus_list", "chara_bonus_by_album", "elemental_type",

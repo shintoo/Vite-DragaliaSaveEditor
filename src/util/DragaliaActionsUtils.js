@@ -62,7 +62,7 @@ const useDragaliaActions = () => {
         }
     };
 
-    const removeAdventurerStory = (adventurerId, removeAll) => {
+    const removeAdventurerStory = (adventurerId) => {
 
         const MEGA_MAN = 10750102;
         const PRINCE = 10140101;
@@ -71,14 +71,13 @@ const useDragaliaActions = () => {
             return;
         }
 
-        const count = removeAll ? 5 : 1;
         const stories = maps.charaStoryMap[adventurerId];
         if (stories === undefined) {
             console.error(`No stories found for adventurer ID: ${adventurerId}`);
             return;
         }
         const storyIds = JsonUtils.getSetFromList(unitStoryList, "unit_story_id");
-        for (let i = 0; i < count; i++) {
+        for (let i = 0; i < stories.length; i++) {
             const storyId = stories[i];
             if (storyId === undefined) {
                 console.error(`No story found for adventurer ID: ${adventurerId} at index: ${i}`);
