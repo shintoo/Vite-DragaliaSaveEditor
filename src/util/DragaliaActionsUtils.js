@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { MappingContext } from '../components/SaveEditor';
 import { addJsonDataListObject, replaceJsonDataListObject, addToObjectListObjectField,
-    updateJsonDataObjectField 
+    updateJsonDataObjectField
 } from '../actions/JsonDataActions';
 
 import { WeaponBuildupPieceType } from '../enum/Enums';
@@ -62,6 +62,35 @@ const useDragaliaActions = () => {
         }
     };
 
+    const removeAdventurerStory = (adventurerId, removeAll) => {
+
+        const MEGA_MAN = 10750102;
+        const PRINCE = 10140101;
+
+        if (adventurerId === MEGA_MAN || adventurerId === PRINCE) {
+            return;
+        }
+
+        const count = removeAll ? 5 : 1;
+        const stories = maps.charaStoryMap[adventurerId];
+        if (stories === undefined) {
+            console.error(`No stories found for adventurer ID: ${adventurerId}`);
+            return;
+        }
+        const storyIds = JsonUtils.getSetFromList(unitStoryList, "unit_story_id");
+        for (let i = 0; i < count; i++) {
+            const storyId = stories[i];
+            if (storyId === undefined) {
+                console.error(`No story found for adventurer ID: ${adventurerId} at index: ${i}`);
+                return;
+            }
+            if (!storyIds.has(storyId)) {
+                continue;
+            }
+            dispatch(removeJsonDataListObject("unit_story_list", "unit_story_id", storyId));
+        }
+    };
+
     const addDragonStory = (dragonMeta, id) => {
         const storyId = +`${dragonMeta.BaseId}01${id}`
         if (JsonUtils.listHasValue(unitStoryList, "unit_story_id", storyId)) {
@@ -72,6 +101,14 @@ const useDragaliaActions = () => {
             "is_read": 0
         };
         dispatch(addJsonDataListObject("unit_story_list", story));
+    }
+
+    const removeDragonStory = (dragonMeta, id) => {
+        const storyId = +`${dragonMeta.BaseId}01${id}`
+        if (!JsonUtils.listHasValue(unitStoryList, "unit_story_id", storyId)) {
+            return;
+        }
+        dispatch(removeJsonDataListObject("unit_story_list", "unit_story_id", storyId));
     }
 
     // given a dragon object to be maxed, update encyclopedia bonus and entry
@@ -90,7 +127,7 @@ const useDragaliaActions = () => {
         const has5Ub = dragonDetails.has5Ub;
         const toUpdateBonuses = maxUnbinds < (has5Ub ? 5 : 4);
         const toUpdateEncyclo = toUpdateBonuses || maxLevel < dragonDetails.maxLevel;
-        
+
         if (toUpdateEncyclo) {
             console.log("Updating encyclopedia entry for dragon: " + dragonMeta.FullName);
             const updatedEntry = {
@@ -114,7 +151,7 @@ const useDragaliaActions = () => {
                     }
                 }
                 dispatch(addToObjectListObjectField(
-                    "fort_bonus_list", "dragon_bonus_by_album", "elemental_type", 
+                    "fort_bonus_list", "dragon_bonus_by_album", "elemental_type",
                     dragonMeta.ElementalTypeId, "hp", hpBonus));
             }
             dispatch(replaceJsonDataListObject("album_dragon_list", "dragon_id", updatedEntry));
@@ -138,10 +175,10 @@ const useDragaliaActions = () => {
             const bonus = hasManaspiral ? 0.3 : 0.2;
             dispatch(addJsonDataListObject("chara_list", newAdventurerObject));
             dispatch(addToObjectListObjectField(
-              "fort_bonus_list", "chara_bonus_by_album", "elemental_type", 
+              "fort_bonus_list", "chara_bonus_by_album", "elemental_type",
               adventurerMeta.ElementalTypeId, "hp", bonus));
             dispatch(addToObjectListObjectField(
-              "fort_bonus_list", "chara_bonus_by_album", "elemental_type", 
+              "fort_bonus_list", "chara_bonus_by_album", "elemental_type",
               adventurerMeta.ElementalTypeId, "attack", bonus));
           } else {
             const newAdventurerObject = DragaliaUtils.getMaxedAdventurer(adventurerMeta, adventurerObject.gettime);
@@ -162,10 +199,10 @@ const useDragaliaActions = () => {
               if (mc < 50) { strBonus = 0.1; }
             }
             dispatch(addToObjectListObjectField(
-              "fort_bonus_list", "chara_bonus_by_album", "elemental_type", 
+              "fort_bonus_list", "chara_bonus_by_album", "elemental_type",
               adventurerMeta.ElementalTypeId, "hp", hpBonus));
             dispatch(addToObjectListObjectField(
-              "fort_bonus_list", "chara_bonus_by_album", "elemental_type", 
+              "fort_bonus_list", "chara_bonus_by_album", "elemental_type",
               adventurerMeta.ElementalTypeId, "attack", strBonus));
           }
           addAdventurerStory(adventurerId, false);
@@ -234,7 +271,7 @@ const useDragaliaActions = () => {
     const addDragon = (dragonId, addAsMaxed) => {
         const albumDragonListObject = albumDragonList.find(obj => obj.dragon_id === dragonId);
         const owned = albumDragonListObject !== undefined;
-        
+
         const dragonMeta = maps.dragonMap[dragonId];
         if (dragonMeta === undefined) {
             console.error(`No dragon found for ID: ${dragonId}`);
@@ -244,11 +281,11 @@ const useDragaliaActions = () => {
         const dragon = addAsMaxed ?
             DragaliaUtils.getMaxedDragon(dragonList, dragonMeta, null, false, null) :
             DragaliaUtils.getNewDragon(dragonList, dragonMeta);
-        
+
         // add new dragon
         dispatch(addJsonDataListObject("dragon_list", dragon));
 
-        
+
         if (owned) { // if dragon owned, update encyclopedia entry
             handleDragonEncyclopedia(dragon);
         } else { // if dragon not owned, handle new encyclopedia entry, new reliability entry
@@ -289,7 +326,7 @@ const useDragaliaActions = () => {
         const stepString = zeroPad(step, 2);
         const weaponBodyBuildupGroupId = +`${buildupGroupId}${buildupPieceTypeString}${stepString}`;
         const weaponBodyBuildupGroup = maps.weaponBodyBuildupGroupMap[weaponBodyBuildupGroupId];
-        
+
         if (weaponBodyBuildupGroup === undefined) {
             console.error(`No weapon buildup group found for ID: ${weaponBodyBuildupGroupId},
                 weapon ID: ${weaponMeta.Id}, type: ${weaponBuildupPieceType}, step: ${step}`);
@@ -370,9 +407,11 @@ const useDragaliaActions = () => {
         dispatch(updateJsonDataObjectField("user_data", "tutorial_status", tutorialStatus));
     }
 
-    return { 
+    return {
         addAdventurerStory,
+        removeAdventurerStory,
         addDragonStory,
+        removeDragonStory,
         handleDragonEncyclopedia,
         maxAdventurer,
         addDragon,
