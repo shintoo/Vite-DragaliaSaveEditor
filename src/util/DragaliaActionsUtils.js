@@ -100,14 +100,6 @@ const useDragaliaActions = () => {
         dispatch(addJsonDataListObject("unit_story_list", story));
     }
 
-    const removeDragonStory = (dragonMeta, id) => {
-        const storyId = +`${dragonMeta.BaseId}01${id}`
-        if (!JsonUtils.listHasValue(unitStoryList, "unit_story_id", storyId)) {
-            return;
-        }
-        dispatch(removeJsonDataListObject("unit_story_list", "unit_story_id", storyId));
-    }
-
     // given a dragon object to be maxed, update encyclopedia bonus and entry
     const handleDragonEncyclopedia = (dragonObject) => {
         const id = dragonObject.dragon_id;
@@ -408,7 +400,6 @@ const useDragaliaActions = () => {
         addAdventurerStory,
         removeAdventurerStory,
         addDragonStory,
-        removeDragonStory,
         handleDragonEncyclopedia,
         maxAdventurer,
         addDragon,
