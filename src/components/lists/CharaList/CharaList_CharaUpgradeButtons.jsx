@@ -41,6 +41,13 @@ function CharaList_CharaUpgradeButtons({adventurerId, adventurerMeta}) {
   }
 
   const onRemove = () => {
+    const MEGA_MAN = 10750102;
+    const PRINCE = 10140101;
+
+    if (adventurerId === MEGA_MAN || adventurerId === PRINCE) {
+      return;
+    }
+
     dispatch(removeJsonDataListObject("chara_list", "chara_id", adventurerId));
     removeAdventurerStory(adventurerId);
 
@@ -102,7 +109,7 @@ function CharaList_CharaUpgradeButtons({adventurerId, adventurerMeta}) {
         key="Remove"
         onClick={() => onRemove() }
         disabled={
-          !isOwned
+          !isOwned || [10750102, 10140101].includes(adventurerId)
         }
         {...commonProps}
       >

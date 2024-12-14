@@ -76,16 +76,14 @@ const useDragaliaActions = () => {
             console.error(`No stories found for adventurer ID: ${adventurerId}`);
             return;
         }
+
         const storyIds = JsonUtils.getSetFromList(unitStoryList, "unit_story_id");
-        for (let i = 0; i < stories.length; i++) {
-            const storyId = stories[i];
-            if (storyId === undefined) {
-                console.error(`No story found for adventurer ID: ${adventurerId} at index: ${i}`);
-                return;
-            }
+
+        for (const storyId of Object.values(stories)) {
             if (!storyIds.has(storyId)) {
                 continue;
             }
+
             dispatch(removeJsonDataListObject("unit_story_list", "unit_story_id", storyId));
         }
     };
